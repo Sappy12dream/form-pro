@@ -1,5 +1,0 @@
-table! {
-    users {
-        id -> Integer,
-    }
-}
