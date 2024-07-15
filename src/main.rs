@@ -9,13 +9,14 @@ mod utils;
 async fn main() -> std::io::Result<()> {
     utils::logger::init_logger();
     let config = config::server::load_config();
-
+    let pool = config::db::establish_connection();
     let server_address = format!("{}:{}", config.host, config.port);
 
     log::info!("Starting server at http://{}", server_address);
 
-    HttpServer::new(|| {
+    HttpServer::new(move || {
         App::new()
+            .app_data(pool.clone())
             .service(routes::hello::hello)
             .service(routes::name::full_name)
     })
